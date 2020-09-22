@@ -7,15 +7,13 @@ const Order = require('./order')
 const Cart = db.define('cart', {
   qty: {
     type: Sequelize.INTEGER,
-    allowNull: false,
-    validate: {min: 0}
+    defaultValue: 1
   }
 })
 const Product_Order = db.define('product_order', {
   qty: {
     type: Sequelize.INTEGER,
-    allowNull: false,
-    validate: {min: 0}
+    defaultValue: 1
   }
 })
 
