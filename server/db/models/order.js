@@ -1,13 +1,14 @@
 const Sequelize = require('sequelize')
 const db = require('../db')
 
-const Order = db.define('user', {
+const Order = db.define('order', {
   date: {
     type: Sequelize.DATE,
     allowNull: false
   },
   total: {
-    type: Sequelize.FLOAT
+    type: Sequelize.FLOAT,
+    allowNull: false
   }
 })
 
