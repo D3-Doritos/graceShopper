@@ -6,7 +6,8 @@ const Order = db.define('order', {
     type: Sequelize.INTEGER
   },
   isComplete: {
-    // true or false
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
   }
 })
 // total should be virtual field

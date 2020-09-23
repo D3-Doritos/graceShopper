@@ -2,9 +2,6 @@ const router = require('express').Router()
 const {User} = require('../db/models')
 module.exports = router
 
-// /api/users/cart
-router.use('/:id/cart', require('./cart'))
-
 // GET mounted on /users/
 router.get('/', async (req, res, next) => {
   try {
@@ -20,6 +17,8 @@ router.get('/', async (req, res, next) => {
     next(err)
   }
 })
+
+// router.param -- to keep code more dry
 
 // GET mounted on /users/:id
 router.get('/:id', async (req, res, next) => {
