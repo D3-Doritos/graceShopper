@@ -63,6 +63,9 @@ const createApp = () => {
   app.use(passport.initialize())
   app.use(passport.session())
 
+  // app.use console.log req.session
+  // add object that keeps track of { product, qty} ==> the cart
+
   // auth and api routes
   app.use('/auth', require('./auth'))
   app.use('/api', require('./api'))
