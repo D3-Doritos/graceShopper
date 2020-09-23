@@ -2,7 +2,17 @@ const router = require('express').Router()
 const {Order, Product, Product_Order} = require('../db/models')
 module.exports = router
 
-// GET mounted on /order/:id
+//GET /api/orders
+router.get('/', async (req, res, next) => {
+  try {
+    const orders = await Order.findAll()
+    res.json(orders)
+  } catch (error) {
+    next(error)
+  }
+})
+
+// GET mounted on api/orders/:id
 router.get('/:id', async (req, res, next) => {
   try {
     const order = await Order.findByPk(req.params.id, {
@@ -15,7 +25,7 @@ router.get('/:id', async (req, res, next) => {
   }
 })
 
-// POST mounted on /order/
+// POST mounted on api/orders/
 router.post('/', async (req, res, next) => {
   try {
     const newOrder = await Order.create(req.body)
