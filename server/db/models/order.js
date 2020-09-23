@@ -2,13 +2,12 @@ const Sequelize = require('sequelize')
 const db = require('../db')
 
 const Order = db.define('order', {
-  date: {
-    type: Sequelize.DATE,
-    allowNull: false
-  },
   total: {
-    type: Sequelize.FLOAT
+    type: Sequelize.INTEGER
+  },
+  isComplete: {
+    // true or false
   }
 })
-
+// total should be virtual field
 module.exports = Order
