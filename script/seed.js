@@ -41,7 +41,7 @@ async function seed() {
       price: 299,
       imageUrl:
         'https://cdn.minibardelivery.com/products/164005/product/51N4T5yXeV.jpg',
-      Description: 'A very cool flavor of Dorito'
+      description: 'A very cool flavor of Dorito'
     },
     {
       productName: 'Nacho Cheese',
@@ -49,7 +49,7 @@ async function seed() {
       price: 299,
       imageUrl:
         'https://images-na.ssl-images-amazon.com/images/I/71MQeIS7FAL._SL1500_.jpg',
-      Description: 'Quite a cheesy flavor of Dorito'
+      description: 'Quite a cheesy flavor of Dorito'
     },
     {
       productName: 'Mountain Dew',
@@ -57,7 +57,7 @@ async function seed() {
       price: 299,
       imageUrl:
         'https://img1.mashed.com/img/gallery/this-strange-new-doritos-flavor-has-everyone-talking/intro-1586545091.jpg',
-      Description: 'A questionable flavor of Dorito'
+      description: 'A questionable flavor of Dorito'
     },
     {
       productName: 'Spicy Sweet Chili',
@@ -65,7 +65,7 @@ async function seed() {
       price: 299,
       imageUrl:
         'https://vegansfirst.com/wp-content/uploads/2020/04/doritos.jpg',
-      Description: 'A very savory flavor of Dorito'
+      description: 'A very savory flavor of Dorito'
     }
   ]
 
@@ -89,12 +89,19 @@ async function seed() {
     products.map(product => Product.create(product))
   )
 
+  // find the user
   const userOne = await User.findByPk(1)
+
+  // find the product
   const productOne = await Product.findByPk(1)
+
+  // Create a Cart on our user
   await userOne.createOrder({date: Date.now()})
 
+  // Find order we created
   const orderOne = await Order.findByPk(1)
-  await orderOne.addProduct(productOne)
+
+  // add product to order
   await orderOne.addProduct(productOne)
 
   console.log(`seeded ${users.length} users`)
