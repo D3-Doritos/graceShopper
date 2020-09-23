@@ -23,7 +23,9 @@ const User = db.define('user', {
     type: Sequelize.STRING,
     unique: true,
     allowNull: false,
-    validate: {notEmpty: true}
+    validate: {
+      isEmail: true
+    }
   },
   isAdmin: {
     type: Sequelize.BOOLEAN,

@@ -7,7 +7,7 @@ const Product = db.define('product', {
     allowNull: false,
     validate: {notEmpty: true}
   },
-  stockQty: {
+  qty: {
     type: Sequelize.INTEGER,
     allowNull: false,
     validate: {min: 0}
@@ -18,7 +18,8 @@ const Product = db.define('product', {
     validate: {min: 0}
   },
   imageUrl: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
+    defaultValue: 'https://i.ebayimg.com/images/g/A0kAAOSwZ41eeIYb/s-l640.jpg'
   },
   description: {
     type: Sequelize.TEXT

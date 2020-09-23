@@ -37,32 +37,32 @@ async function seed() {
   const products = [
     {
       productName: 'Cool Ranch',
-      stockQty: 100,
-      price: 2.99,
+      qty: 100,
+      price: 299,
       imageUrl:
         'https://cdn.minibardelivery.com/products/164005/product/51N4T5yXeV.jpg',
       Description: 'A very cool flavor of Dorito'
     },
     {
       productName: 'Nacho Cheese',
-      stockQty: 100,
-      price: 2.99,
+      qty: 100,
+      price: 299,
       imageUrl:
         'https://images-na.ssl-images-amazon.com/images/I/71MQeIS7FAL._SL1500_.jpg',
       Description: 'Quite a cheesy flavor of Dorito'
     },
     {
       productName: 'Mountain Dew',
-      stockQty: 100,
-      price: 2.99,
+      qty: 100,
+      price: 299,
       imageUrl:
         'https://img1.mashed.com/img/gallery/this-strange-new-doritos-flavor-has-everyone-talking/intro-1586545091.jpg',
       Description: 'A questionable flavor of Dorito'
     },
     {
       productName: 'Spicy Sweet Chili',
-      stockQty: 100,
-      price: 2.99,
+      qty: 100,
+      price: 299,
       imageUrl:
         'https://vegansfirst.com/wp-content/uploads/2020/04/doritos.jpg',
       Description: 'A very savory flavor of Dorito'
@@ -91,7 +91,6 @@ async function seed() {
 
   const userOne = await User.findByPk(1)
   const productOne = await Product.findByPk(1)
-  await userOne.addProduct(productOne)
   await userOne.createOrder({date: Date.now()})
 
   const orderOne = await Order.findByPk(1)
