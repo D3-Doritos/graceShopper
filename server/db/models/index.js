@@ -3,19 +3,8 @@ const db = require('../db')
 const User = require('./user')
 const Product = require('./product')
 const Order = require('./order')
-
-const Cart = db.define('cart', {
-  qty: {
-    type: Sequelize.INTEGER,
-    defaultValue: 1
-  }
-})
-const Product_Order = db.define('product_order', {
-  qty: {
-    type: Sequelize.INTEGER,
-    defaultValue: 1
-  }
-})
+const Cart = require('./cart')
+const Product_Order = require('./product_order')
 
 User.belongsToMany(Product, {through: Cart})
 Product.belongsToMany(User, {through: Cart})

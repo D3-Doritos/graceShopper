@@ -2,6 +2,9 @@ const router = require('express').Router()
 const {User} = require('../db/models')
 module.exports = router
 
+// /api/users/cart
+router.use('/:id/cart', require('./cart'))
+
 // GET mounted on /users/
 router.get('/', async (req, res, next) => {
   try {
