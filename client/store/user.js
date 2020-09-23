@@ -4,7 +4,9 @@ import history from '../history'
 /**
  * ACTION TYPES
  */
+const CREATE_USER = 'CREATE_USER'
 const GET_USER = 'GET_USER'
+const EDIT_USER = 'EDIT_USER'
 const REMOVE_USER = 'REMOVE_USER'
 
 /**
@@ -15,8 +17,10 @@ const defaultUser = {}
 /**
  * ACTION CREATORS
  */
-const getUser = user => ({type: GET_USER, user})
-const removeUser = () => ({type: REMOVE_USER})
+const createdUser = user => ({type: CREATE_USER, user})
+const gotUser = user => ({type: GET_USER, user})
+const editedUser = user => ({type: EDIT_USER, user})
+const removedUser = () => ({type: REMOVE_USER})
 
 /**
  * THUNK CREATORS
@@ -24,7 +28,7 @@ const removeUser = () => ({type: REMOVE_USER})
 export const me = () => async dispatch => {
   try {
     const res = await axios.get('/auth/me')
-    dispatch(getUser(res.data || defaultUser))
+    dispatch(gotUser(res.data || defaultUser))
   } catch (err) {
     console.error(err)
   }
@@ -35,11 +39,11 @@ export const auth = (email, password, method) => async dispatch => {
   try {
     res = await axios.post(`/auth/${method}`, {email, password})
   } catch (authError) {
-    return dispatch(getUser({error: authError}))
+    return dispatch(gotUser({error: authError}))
   }
 
   try {
-    dispatch(getUser(res.data))
+    dispatch(gotUser(res.data))
     history.push('/home')
   } catch (dispatchOrHistoryErr) {
     console.error(dispatchOrHistoryErr)
@@ -49,10 +53,31 @@ export const auth = (email, password, method) => async dispatch => {
 export const logout = () => async dispatch => {
   try {
     await axios.post('/auth/logout')
-    dispatch(removeUser())
+    dispatch(removedUser())
     history.push('/login')
   } catch (err) {
     console.error(err)
+  }
+}
+
+export const createUser = userParams => async dispatch => {
+  try {
+    const newUser = await axios.post('/api/users/', userParams)
+    dispatch(createdUser(newUser.data))
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export const editUser = userParams => async dispatch => {
+  try {
+    const updatedUser = await axios.put(
+      `/api/users/${userParams.id}`,
+      userParams
+    )
+    dispatch(editedUser(updatedUser.data))
+  } catch (error) {
+    console.error(error)
   }
 }
 
@@ -65,6 +90,10 @@ export default function(state = defaultUser, action) {
       return action.user
     case REMOVE_USER:
       return defaultUser
+    case CREATE_USER:
+      return action.user
+    case EDIT_USER:
+      return action.user
     default:
       return state
   }
