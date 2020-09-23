@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const {User} = require('../db/models')
+const {User, Order} = require('../db/models')
 module.exports = router
 
 // GET mounted on /users/
@@ -44,6 +44,29 @@ router.post('/', async (req, res, next) => {
   }
 })
 
+// Adding single Order(Cart) to User
+router.put('/:id/addOrder/:orderId', async (req, res, next) => {
+  try {
+    const user = await User.findByPk(req.params.id)
+    const order = await Order.findByPk(req.params.orderId)
+
+    if (!user || !order) {
+      res.sendStatus(404)
+    }
+
+    await user.addOrder(order)
+
+    const updatedUser = await User.findByPk(req.params.id, {
+      include: Order
+    })
+
+    res.json(updatedUser)
+  } catch (error) {
+    console.log('ERROR: ', error)
+    next(error)
+  }
+})
+
 // PUT mounted on /users/:id
 router.put('/:id', async (req, res, next) => {
   try {
@@ -58,6 +81,31 @@ router.put('/:id', async (req, res, next) => {
     next(error)
   }
 })
+
+// Deleting Order from User
+router.delete(
+  '/:id/deleteOrder/:orderId',
+  /*adminhook*/ async (req, res, next) => {
+    try {
+      const user = await User.findByPk(req.params.id)
+      const order = await Order.findByPk(req.params.orderId)
+
+      if (!order || !user) {
+        res.sendStatus(404)
+      }
+      await user.removeOrder(order)
+
+      const updatedUser = await User.findByPk(req.params.id, {
+        include: Order
+      })
+
+      res.json(updatedUser)
+    } catch (error) {
+      console.log('ERROR: ', error)
+      next(error)
+    }
+  }
+)
 
 // DELETE mounted on /users/:id
 router.delete('/:id', async (req, res, next) => {
