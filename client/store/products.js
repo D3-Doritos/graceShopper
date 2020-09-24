@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 // ACTIONS
-const GET_PRODUCTS = 'GET_PRODUCT'
+const GET_PRODUCTS = 'GET_PRODUCTS'
 
 // ACTION CREATORS
 const gotProducts = products => ({type: GET_PRODUCTS, products})
@@ -10,6 +10,7 @@ const gotProducts = products => ({type: GET_PRODUCTS, products})
 export const fetchProducts = () => async dispatch => {
   try {
     const products = await axios.get('/api/products')
+    console.log('products.....', products)
     dispatch(gotProducts(products.data))
   } catch (error) {
     console.error(error)
