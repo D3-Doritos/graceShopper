@@ -5,7 +5,11 @@ module.exports = router
 //GET /api/products
 router.get('/', async (req, res, next) => {
   try {
-    const products = await Product.findAll()
+    const products = await Product.findAll({
+      include: {
+        all: true
+      }
+    })
     res.json(products)
   } catch (error) {
     next(error)
@@ -15,7 +19,11 @@ router.get('/', async (req, res, next) => {
 //GET /api/products/:id
 router.get('/:id', async (req, res, next) => {
   try {
-    const product = await Product.findByPk(req.params.id)
+    const product = await Product.findByPk(req.params.id, {
+      include: {
+        all: true
+      }
+    })
     res.json(product)
   } catch (error) {
     next(error)

@@ -28,7 +28,9 @@ router.get('/:id/cart', async (req, res, next) => {
         userId: req.params.id,
         isComplete: false
       },
-      include: Product
+      include: {
+        all: true
+      }
     })
     res.json(cart)
   } catch (error) {
@@ -40,7 +42,10 @@ router.get('/:id/cart', async (req, res, next) => {
 router.get('/:id', async (req, res, next) => {
   try {
     const user = await User.findByPk(req.params.id, {
-      attributes: ['id', 'username', 'firstName', 'lastName', 'email']
+      attributes: ['id', 'username', 'firstName', 'lastName', 'email'],
+      include: {
+        all: true
+      }
     })
     res.json(user)
   } catch (err) {
