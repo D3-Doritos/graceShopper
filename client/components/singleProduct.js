@@ -12,12 +12,14 @@ class SingleProduct extends React.Component {
   }
 
   render() {
+    console.log('USER--------->', this.props.user)
     return (
       <div>
         <img src={this.props.singleProduct.imageUrl} height={200} width={200} />
         <h3>{this.props.singleProduct.name}</h3>
         <h4>{this.props.singleProduct.price}</h4>
         <h4>{this.props.singleProduct.description}</h4>
+        {this.props.user.isAdmin ? <h3>ADMIN</h3> : <h3>user</h3>}
       </div>
     )
   }
@@ -25,7 +27,8 @@ class SingleProduct extends React.Component {
 
 const mapState = state => {
   return {
-    singleProduct: state.singleProduct
+    singleProduct: state.singleProduct,
+    user: state.user
   }
 }
 const mapDispatch = dispatch => {
