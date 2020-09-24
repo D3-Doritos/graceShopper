@@ -5,7 +5,11 @@ module.exports = router
 //GET /api/orders
 router.get('/', async (req, res, next) => {
   try {
-    const orders = await Order.findAll()
+    const orders = await Order.findAll({
+      include: {
+        all: true
+      }
+    })
     res.json(orders)
   } catch (error) {
     next(error)
@@ -16,7 +20,9 @@ router.get('/', async (req, res, next) => {
 router.get('/:id', async (req, res, next) => {
   try {
     const order = await Order.findByPk(req.params.id, {
-      include: Product
+      include: {
+        all: true
+      }
     })
     res.json(order)
   } catch (err) {
@@ -40,7 +46,9 @@ router.post('/', async (req, res, next) => {
 router.put('/:id/addProduct/:productId', async (req, res, next) => {
   try {
     const order = await Order.findByPk(req.params.id, {
-      include: Product
+      include: {
+        all: true
+      }
     })
     const product = await Product.findByPk(req.params.productId)
 
