@@ -32,7 +32,11 @@ router.get('/:id/cart', async (req, res, next) => {
         all: true
       }
     })
-    res.json(cart)
+    if (cart) {
+      res.json(cart)
+    } else {
+      res.send('Cart is empty')
+    }
   } catch (error) {
     next(error)
   }
