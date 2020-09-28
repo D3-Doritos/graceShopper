@@ -84,14 +84,30 @@ router.put('/:id/addProduct/:productId', async (req, res, next) => {
   }
 })
 
-router.post('/:id/addQty/:productId', async (req, res, next) => {
+router.put('/:id/addQty/:productId', async (req, res, next) => {
   try {
     const productOrder = await Product_Order.findOne({
       where: {orderId: req.params.id, productId: req.params.productId}
     })
-    const currQty = productOrder.qty + 1
-    await productOrder.update(...productOrder, {qty: currQty})
-    const updatedOrder = await Order.findOne({
+    const currQty = productOrder.qty
+    await productOrder.update({qty: currQty + 1})
+    const updatedOrder = await Product_Order.findOne({
+      where: {orderId: req.params.id, productId: req.params.productId}
+    })
+    res.json(updatedOrder)
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.put('/:id/subtractQty/:productId', async (req, res, next) => {
+  try {
+    const productOrder = await Product_Order.findOne({
+      where: {orderId: req.params.id, productId: req.params.productId}
+    })
+    const currQty = productOrder.qty
+    await productOrder.update({qty: currQty - 1})
+    const updatedOrder = await Product_Order.findOne({
       where: {orderId: req.params.id, productId: req.params.productId}
     })
     res.json(updatedOrder)
