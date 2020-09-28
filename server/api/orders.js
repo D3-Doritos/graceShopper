@@ -84,6 +84,22 @@ router.put('/:id/addProduct/:productId', async (req, res, next) => {
   }
 })
 
+router.post('/:id/addQty/:productId', async (req, res, next) => {
+  try {
+    const productOrder = await Product_Order.findOne({
+      where: {orderId: req.params.id, productId: req.params.productId}
+    })
+    const currQty = productOrder.qty + 1
+    await productOrder.update(...productOrder, {qty: currQty})
+    const updatedOrder = await Order.findOne({
+      where: {orderId: req.params.id, productId: req.params.productId}
+    })
+    res.json(updatedOrder)
+  } catch (error) {
+    next(error)
+  }
+})
+
 // PUT mounted on /order/:id
 router.put('/:id', async (req, res, next) => {
   try {
