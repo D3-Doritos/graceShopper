@@ -91,8 +91,8 @@ router.put('/:id/addQty/:productId', async (req, res, next) => {
     })
     const currQty = productOrder.qty
     await productOrder.update({qty: currQty + 1})
-    const updatedOrder = await Product_Order.findOne({
-      where: {orderId: req.params.id, productId: req.params.productId}
+    const updatedOrder = await Order.findByPk(req.params.id, {
+      include: Product
     })
     res.json(updatedOrder)
   } catch (error) {
@@ -107,8 +107,8 @@ router.put('/:id/subtractQty/:productId', async (req, res, next) => {
     })
     const currQty = productOrder.qty
     await productOrder.update({qty: currQty - 1})
-    const updatedOrder = await Product_Order.findOne({
-      where: {orderId: req.params.id, productId: req.params.productId}
+    const updatedOrder = await Order.findByPk(req.params.id, {
+      include: Product
     })
     res.json(updatedOrder)
   } catch (error) {
