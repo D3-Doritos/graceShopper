@@ -48,13 +48,34 @@ class SingleProduct extends React.Component {
     event.preventDefault()
     if (this.props.user.id) {
       this.props.getTheCart(this.props.user.id)
+      this.props.addTheProduct(
+        this.props.singleOrder.id,
+        this.props.singleProduct.id
+      )
+      this.props.getTheCart(this.props.user.id)
+    } else {
+      if (window.localStorage.cart) {
+        const cart = JSON.parse(window.localStorage.cart)
+        if (cart[this.props.singleProduct.id]) {
+          console.log('inside a place')
+          let qty = cart[this.props.singleProduct.id]
+          const newQty = qty + 1
+          cart[this.props.singleProduct.id] = newQty
+        } else {
+          cart[this.props.singleProduct.id] = 1
+        }
+        const stringedCart = JSON.stringify(cart)
+        window.localStorage.setItem('cart', stringedCart)
+      }
+      if (!window.localStorage.cart) {
+        const id = this.props.singleProduct.id
+        const cart = {}
+        cart[id] = 1
+        const stringCart = JSON.stringify(cart)
+        window.localStorage.setItem('cart', stringCart)
+        console.log(window.localStorage)
+      }
     }
-
-    this.props.addTheProduct(
-      this.props.singleOrder.id,
-      this.props.singleProduct.id
-    )
-    this.props.getTheCart(this.props.user.id)
   }
 
   handleDelete(event) {
@@ -126,7 +147,12 @@ class SingleProduct extends React.Component {
             </div>
           </div>
         ) : (
-          <h3>{this.props.user.firstName}'s favorite flavor!</h3>
+          <div>
+            <h3>{this.props.user.firstName}'s favorite flavor!</h3>
+            <div>
+              <button onClick={this.handleClick}>Add to Cart</button>
+            </div>
+          </div>
         )}
       </div>
     )

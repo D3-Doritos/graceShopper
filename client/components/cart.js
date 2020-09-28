@@ -89,7 +89,8 @@ class Cart extends React.Component {
 
 const mapState = state => {
   return {
-    cart: state.singleOrder
+    cart: state.singleOrder,
+    user: state.user
   }
 }
 const mapDispatch = dispatch => {
