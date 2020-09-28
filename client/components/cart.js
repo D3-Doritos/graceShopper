@@ -10,7 +10,6 @@ class Cart extends React.Component {
   }
   componentDidMount() {
     const userCart = this.props.getTheCart(this.props.match.params.userId)
-    console.log('user cart----', userCart)
   }
 
   handleClick(event) {
@@ -19,7 +18,6 @@ class Cart extends React.Component {
   }
 
   render() {
-    console.log('qty---->', this.props.cart)
     return (
       <div>
         <h1>Cart test</h1>
@@ -52,7 +50,7 @@ class Cart extends React.Component {
 
 const mapState = state => {
   return {
-    cart: state.order
+    cart: state.singleOrder
   }
 }
 const mapDispatch = dispatch => {
