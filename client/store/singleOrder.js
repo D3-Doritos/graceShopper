@@ -6,6 +6,8 @@ const GET_CART = 'GET_CART'
 const ADD_PRODUCT = 'ADD_PRODUCT'
 const REMOVE_PRODUCT = 'REMOVE_PRODUCT'
 const UPDATE_CART = 'UPDATE_CART'
+const ADD_QTY = 'ADD_QTY'
+const SUBTRACT_QTY = 'SUBTRACT_QTY'
 
 // ACTION CREATORS
 const gotOrder = order => ({type: GET_ORDER, order})
@@ -13,6 +15,8 @@ const gotCart = cart => ({type: GET_CART, cart})
 const addedProduct = cart => ({type: ADD_PRODUCT, cart})
 const removedProduct = cart => ({type: REMOVE_PRODUCT, cart})
 const updatedCart = cart => ({type: UPDATE_CART, cart})
+const addedQty = cart => ({type: ADD_QTY, cart})
+const subtractedQty = cart => ({type: SUBTRACT_QTY, cart})
 
 // THUNK CREATORS
 export const fetchOrder = orderId => async dispatch => {
@@ -55,6 +59,28 @@ export const removeProduct = (orderId, productId) => async dispatch => {
   }
 }
 
+export const addQty = (orderId, productId) => async dispatch => {
+  try {
+    const updatedOrder = await axios.put(
+      `/api/orders/${orderId}/addQty/${productId}`
+    )
+    dispatch(addedQty(updatedOrder.data))
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export const subtractQty = (orderId, productId) => async dispatch => {
+  try {
+    const updatedOrder = await axios.put(
+      `/api/orders/${orderId}/subtractQty/${productId}`
+    )
+    dispatch(subtractedQty(updatedOrder.data))
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 export const updateCart = (orderId, newCart) => async dispatch => {
   try {
     const theUpdatedCart = await axios.put(`/api/orders/${orderId}`, newCart)
@@ -76,6 +102,10 @@ export default function(state = initialState, action) {
     case ADD_PRODUCT:
       return action.cart
     case REMOVE_PRODUCT:
+      return action.cart
+    case ADD_QTY:
+      return action.cart
+    case SUBTRACT_QTY:
       return action.cart
     default:
       return state

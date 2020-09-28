@@ -84,6 +84,38 @@ router.put('/:id/addProduct/:productId', async (req, res, next) => {
   }
 })
 
+router.put('/:id/addQty/:productId', async (req, res, next) => {
+  try {
+    const productOrder = await Product_Order.findOne({
+      where: {orderId: req.params.id, productId: req.params.productId}
+    })
+    const currQty = productOrder.qty
+    await productOrder.update({qty: currQty + 1})
+    const updatedOrder = await Order.findByPk(req.params.id, {
+      include: Product
+    })
+    res.json(updatedOrder)
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.put('/:id/subtractQty/:productId', async (req, res, next) => {
+  try {
+    const productOrder = await Product_Order.findOne({
+      where: {orderId: req.params.id, productId: req.params.productId}
+    })
+    const currQty = productOrder.qty
+    await productOrder.update({qty: currQty - 1})
+    const updatedOrder = await Order.findByPk(req.params.id, {
+      include: Product
+    })
+    res.json(updatedOrder)
+  } catch (error) {
+    next(error)
+  }
+})
+
 // PUT mounted on /order/:id
 router.put('/:id', async (req, res, next) => {
   try {
