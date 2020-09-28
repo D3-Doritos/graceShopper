@@ -23,7 +23,6 @@ class SingleProduct extends React.Component {
     this.props.getMe()
     this.props.getSingleProduct(this.props.match.params.productId)
     if (this.props.user.id) {
-      console.log('getting the cart')
       this.props.getTheCart(this.props.user.id)
     }
   }
@@ -47,10 +46,9 @@ class SingleProduct extends React.Component {
 
   handleClick(event) {
     event.preventDefault()
-    // this.props.getMe()
-    // if (this.props.user.id) {
-    //   this.props.getTheCart(this.props.user.id)
-    // }
+    if (this.props.user.id) {
+      this.props.getTheCart(this.props.user.id)
+    }
 
     this.props.addTheProduct(
       this.props.singleOrder.id,
