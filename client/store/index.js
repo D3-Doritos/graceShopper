@@ -7,9 +7,11 @@ import products from './products'
 import singleProduct from './singleProduct'
 import singleOrder from './singleOrder'
 import orders from './orders'
+import allUsers from './allUsers'
 
 const reducer = combineReducers({
   user,
+  allUsers,
   orders,
   products,
   singleProduct,

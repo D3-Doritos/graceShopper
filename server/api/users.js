@@ -5,13 +5,17 @@ module.exports = router
 // GET mounted on /users/
 router.get('/', async (req, res, next) => {
   try {
-    const users = await User.findAll({
-      // explicitly select only the id and email fields - even though
-      // users' passwords are encrypted, it won't help if we just
-      // send everything to anyone who asks!
-      attributes: ['id', 'username', 'firstName', 'lastName', 'email']
-    })
-    res.json(users)
+    if (req.user && req.user.isAdmin) {
+      const users = await User.findAll({
+        // explicitly select only the id and email fields - even though
+        // users' passwords are encrypted, it won't help if we just
+        // send everything to anyone who asks!
+        attributes: ['id', 'username', 'firstName', 'lastName', 'email']
+      })
+      res.json(users)
+    } else {
+      res.sendStatus(401)
+    }
   } catch (err) {
     console.log('ERROR: ', err)
     next(err)
