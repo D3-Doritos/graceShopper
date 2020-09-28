@@ -94,6 +94,14 @@ export const editUser = userParams => async dispatch => {
   }
 }
 
+export const getUser = userId => async dispatch => {
+  try {
+    const user = await axios.get(`api/users/${userId}`)
+    dispatch(gotUser(user.data))
+  } catch (error) {
+    console.error(error)
+  }
+}
 /**
  * REDUCER
  */

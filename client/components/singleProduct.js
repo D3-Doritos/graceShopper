@@ -1,13 +1,21 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {fetchProduct, updateProduct} from '../store/singleProduct'
+import {
+  fetchProduct,
+  updateProduct,
+  deleteProduct
+} from '../store/singleProduct'
 import {getCart, addProduct} from '../store/singleOrder'
 
 class SingleProduct extends React.Component {
   constructor(props) {
     super(props)
+    this.state = {
+      isDeleted: false
+    }
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleClick = this.handleClick.bind(this)
+    this.handleDelete = this.handleDelete.bind(this)
   }
 
   componentDidMount() {
@@ -37,16 +45,33 @@ class SingleProduct extends React.Component {
   handleClick(event) {
     event.preventDefault()
     this.props.addTheProduct()
+    this.props.getTheCart(this.props.user.id)
+  }
+
+  handleDelete(event) {
+    event.preventDefault()
+    this.props.deleteTheProduct(this.props.singleProduct)
+    this.setState({isDeleted: true})
   }
 
   render() {
     console.log(this.props)
     return (
       <div>
-        <img src={this.props.singleProduct.imageUrl} height={200} width={200} />
-        <h3>{this.props.singleProduct.name}</h3>
-        <h4>{this.props.singleProduct.price}</h4>
-        <h4>{this.props.singleProduct.description}</h4>
+        {this.state.isDeleted ? (
+          <h3>No Product!</h3>
+        ) : (
+          <div>
+            <img
+              src={this.props.singleProduct.imageUrl}
+              height={200}
+              width={200}
+            />
+            <h3>{this.props.singleProduct.name}</h3>
+            <h4>{this.props.singleProduct.price}</h4>
+            <h4>{this.props.singleProduct.description}</h4>
+          </div>
+        )}
         {this.props.user.isAdmin ? (
           <div>
             <form onSubmit={this.handleSubmit} name={name}>
@@ -85,10 +110,15 @@ class SingleProduct extends React.Component {
               </div>
               <div />
             </form>
-            <button onClick={this.handleClick}>Add to Cart</button>
+            <div>
+              <button onClick={this.handleDelete}>Delete From DB</button>
+            </div>
+            <div>
+              <button onClick={this.handleClick}>Add to Cart</button>
+            </div>
           </div>
         ) : (
-          <h3>user</h3>
+          <h3>{this.props.user.firstName}'s favorite flavor!</h3>
         )}
       </div>
     )
@@ -108,7 +138,8 @@ const mapDispatch = dispatch => {
     updateSingleProduct: product => dispatch(updateProduct(product)),
     addTheProduct: (orderId, productId) =>
       dispatch(addProduct(orderId, productId)),
-    getTheCart: userId => dispatch(getCart(userId))
+    getTheCart: userId => dispatch(getCart(userId)),
+    deleteTheProduct: product => dispatch(deleteProduct(product))
   }
 }
 

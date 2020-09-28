@@ -2,7 +2,6 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {getCart, updateCart, removeProduct} from '../store/singleOrder'
 import {Link} from 'react-router-dom'
-import user from '../store/user'
 
 class Cart extends React.Component {
   constructor(props) {
@@ -32,7 +31,11 @@ class Cart extends React.Component {
                 <img src={product.imageUrl} height={200} width={200} />
                 <div>{product.description}</div>
                 <Link to={`/products/${product.id}`}>Link to Product</Link>
-                <button value={product.id} onClick={this.handleClick}>
+                <button
+                  type="remove"
+                  value={product.id}
+                  onClick={this.handleClick}
+                >
                   Remove Item
                 </button>
                 <br />
