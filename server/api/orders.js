@@ -55,23 +55,12 @@ router.put('/:id/addProduct/:productId', async (req, res, next) => {
     if (!order || !product) {
       res.sendStatus(404)
     }
-
-    // if (order.products.includes(product)) {
-    //   console.log('inside stuff')
-    //   const orderedProduct = await Product_Order.findOne({
-    //     where: {
-    //       orderId: req.params.id,
-    //       productId: req.params.productId,
-    //     },
-    //   })
-    //   const newQty = orderedProduct.qty + 1
-    //   await orderedProduct.update({
-    //     qty: newQty,
-    //   })
-    // } else {
-    //   console.log('inside the else')
     await order.addProduct(product)
-    // }
+
+    const productOrder = await Product_Order.findOne({
+      where: {orderId: req.params.id, productId: req.params.productId}
+    })
+    await productOrder.update({historicalPrice: product.price})
 
     const updatedOrder = await Order.findByPk(req.params.id, {
       include: Product

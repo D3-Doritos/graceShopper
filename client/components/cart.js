@@ -45,6 +45,7 @@ class Cart extends React.Component {
               <div key={product.id}>
                 <div>{product.name}</div>
                 <img src={product.imageUrl} height={200} width={200} />
+                <div>Price: ${product.product_order.historicalPrice}</div>
                 <div>Quantity: {product.product_order.qty}</div>
                 <div>{product.description}</div>
                 <Link to={`/products/${product.id}`}>Link to Product</Link>
