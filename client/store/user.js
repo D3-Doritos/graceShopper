@@ -1,5 +1,6 @@
 import axios from 'axios'
 import history from '../history'
+import {getCart} from './singleOrder'
 
 /**
  * ACTION TYPES
@@ -29,6 +30,7 @@ export const me = () => async dispatch => {
   try {
     const res = await axios.get('/auth/me')
     dispatch(gotUser(res.data || defaultUser))
+    dispatch(getCart(res.data.id))
   } catch (err) {
     console.error(err)
   }

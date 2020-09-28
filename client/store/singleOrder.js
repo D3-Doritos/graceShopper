@@ -49,7 +49,7 @@ export const removeProduct = (orderId, productId) => async dispatch => {
     const updatedOrder = await axios.delete(
       `/api/orders/${orderId}/deleteProduct/${productId}`
     )
-    dispatch(removedProduct(updatedOrder))
+    dispatch(removedProduct(updatedOrder.data))
   } catch (error) {
     console.error(error)
   }
