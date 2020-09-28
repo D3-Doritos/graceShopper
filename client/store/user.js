@@ -30,7 +30,9 @@ export const me = () => async dispatch => {
   try {
     const res = await axios.get('/auth/me')
     dispatch(gotUser(res.data || defaultUser))
-    dispatch(getCart(res.data.id))
+    if (res.data) {
+      dispatch(getCart(res.data.id))
+    }
   } catch (err) {
     console.error(err)
   }

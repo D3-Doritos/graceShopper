@@ -13,4 +13,11 @@ const Product_Order = db.define('product_order', {
   }
 })
 
+// after save hook
+// get order
+// all instances associated
+// map through this table
+// calculate prices
+// add and update orders instance
+
 module.exports = Product_Order
