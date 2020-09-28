@@ -7,6 +7,7 @@ import {
   addQty,
   subtractQty
 } from '../store/singleOrder'
+import {fetchProducts} from '../store/products'
 import {Link} from 'react-router-dom'
 
 class Cart extends React.Component {
@@ -36,6 +37,20 @@ class Cart extends React.Component {
   }
 
   render() {
+    if (this.props.cart.products) {
+      const productArray = this.props.cart.products
+    } else {
+      const localCart = JSON.parse(window.localStorage.getItem('cart'))
+      const cartArr = Object.keys(localCart)
+      const allProducts = this.props.getProducts()
+      const productArray = cartArr.map(async product => {
+        const newProduct = await this.props.getProduct(product)
+        return newProduct
+      })
+
+      console.log('all products ----', allProducts)
+    }
+
     return (
       <div>
         <h1>Cart test</h1>
@@ -101,7 +116,8 @@ const mapDispatch = dispatch => {
       dispatch(removeProduct(orderId, productId)),
     addQty: (orderId, productId) => dispatch(addQty(orderId, productId)),
     subtractQty: (orderId, productId) =>
-      dispatch(subtractQty(orderId, productId))
+      dispatch(subtractQty(orderId, productId)),
+    getProducts: () => dispatch(fetchProducts())
   }
 }
 
