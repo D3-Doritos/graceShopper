@@ -22,11 +22,13 @@ class SingleProduct extends React.Component {
     const productName = event.target.productName.value
     const qty = event.target.qty.value
     const price = event.target.price.value
+    const description = event.target.description.value
     const imageUrl = event.target.imageUrl.value
     this.props.updateSingleProduct({
       productName,
       qty,
       price,
+      description,
       imageUrl,
       id: this.props.match.params.productId
     })
@@ -65,6 +67,12 @@ class SingleProduct extends React.Component {
                   <small>Price</small>
                 </label>
                 <input name="price" type="text" />
+              </div>
+              <div>
+                <label htmlFor="description">
+                  <small>Description</small>
+                </label>
+                <input name="description" type="text" />
               </div>
               <div>
                 <label htmlFor="imageUrl">
