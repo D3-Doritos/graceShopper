@@ -10,6 +10,7 @@ import {
 } from '../store/singleOrder'
 import {fetchProducts} from '../store/products'
 import {Link} from 'react-router-dom'
+import {editOrder} from '../store/orders'
 
 class Cart extends React.Component {
   constructor(props) {
@@ -38,12 +39,9 @@ class Cart extends React.Component {
 
   handleAdd(event) {
     event.preventDefault()
-    console.log('this.props----->', this.props)
     if (this.props.user.id) {
-      console.log('inside if statement')
       this.props.addQty(this.props.cart.id, event.target.value)
     } else {
-      console.log('______________-inside the ELSE____________')
       const localCart = JSON.parse(window.localStorage.getItem('cart'))
       localCart[event.target.value] = localCart[event.target.value] + 1
       const stringedCart = JSON.stringify(localCart)
@@ -77,9 +75,20 @@ class Cart extends React.Component {
         isComplete: true
       })
     }
+    let total = 0
+    this.props.cart.products.forEach(product => {
+      const productTotal =
+        product.product_order.price * product.product_order.qty
+      total += productTotal
+    })
+
+    this.props.editOrder(this.props.cart.products.product_order.orderId, {
+      total: total
+    })
   }
 
   render() {
+    console.log('this.props.cart.products', this.props.cart.products)
     return (
       <div>
         <div>
@@ -152,7 +161,8 @@ const mapDispatch = dispatch => {
     subtractQty: (orderId, productId) =>
       dispatch(subtractQty(orderId, productId)),
     getProducts: () => dispatch(fetchProducts()),
-    createTheCart: cart => dispatch(createCart(cart))
+    createTheCart: cart => dispatch(createCart(cart)),
+    editOrder: (orderId, total) => dispatch(editOrder(orderId, total))
   }
 }
 
