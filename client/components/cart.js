@@ -78,11 +78,11 @@ class Cart extends React.Component {
     let total = 0
     this.props.cart.products.forEach(product => {
       const productTotal =
-        product.product_order.price * product.product_order.qty
+        product.product_order.historicalPrice * product.product_order.qty
       total += productTotal
     })
 
-    this.props.editOrder(this.props.cart.products.product_order.orderId, {
+    this.props.editOrder(this.props.cart.products[0].product_order.orderId, {
       total: total
     })
   }
