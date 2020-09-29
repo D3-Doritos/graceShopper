@@ -11,5 +11,6 @@ const Order = db.define('order', {
   }
 })
 // total should be virtual field
+// update stock qty
 
 module.exports = Order

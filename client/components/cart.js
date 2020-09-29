@@ -86,6 +86,8 @@ class Cart extends React.Component {
           await this.props.addQty(cartId, cartArr[i])
         }
       }
+      this.props.history.push(`/checkout/${cartId}`)
+      window.localStorage.clear()
     }
   }
 
