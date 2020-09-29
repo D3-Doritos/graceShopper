@@ -23,7 +23,7 @@ const createdCart = cart => ({type: CREATE_CART, cart})
 // THUNK CREATORS
 export const fetchOrder = orderId => async dispatch => {
   try {
-    const order = await axios.get(`/api/order/${orderId}`)
+    const order = await axios.get(`/api/orders/${orderId}`)
     dispatch(gotOrder(order.data))
   } catch (error) {
     console.error(error)
@@ -141,6 +141,8 @@ export default function(state = initialState, action) {
     case ADD_QTY:
       return action.cart
     case SUBTRACT_QTY:
+      return action.cart
+    case CREATE_CART:
       return action.cart
     default:
       return state

@@ -1,21 +1,19 @@
 const router = require('express').Router()
 const {User, Order, Product} = require('../db/models')
 module.exports = router
+const adminOnly = require('../../utils/adminOnly')
+const userOrAdmin = require('../../utils/userOrAdmin')
 
 // GET mounted on /users/
-router.get('/', async (req, res, next) => {
+router.get('/', adminOnly, async (req, res, next) => {
   try {
-    if (req.user && req.user.isAdmin) {
-      const users = await User.findAll({
-        // explicitly select only the id and email fields - even though
-        // users' passwords are encrypted, it won't help if we just
-        // send everything to anyone who asks!
-        attributes: ['id', 'username', 'firstName', 'lastName', 'email']
-      })
-      res.json(users)
-    } else {
-      res.sendStatus(401)
-    }
+    const users = await User.findAll({
+      // explicitly select only the id and email fields - even though
+      // users' passwords are encrypted, it won't help if we just
+      // send everything to anyone who asks!
+      attributes: ['id', 'username', 'firstName', 'lastName', 'email']
+    })
+    res.json(users)
   } catch (err) {
     console.log('ERROR: ', err)
     next(err)
@@ -25,7 +23,7 @@ router.get('/', async (req, res, next) => {
 // router.param -- to keep code more dry
 
 // GET mounted on /users/:id
-router.get('/:id/cart', async (req, res, next) => {
+router.get('/:id/cart', userOrAdmin, async (req, res, next) => {
   try {
     const cart = await Order.findOne({
       where: {
@@ -47,7 +45,7 @@ router.get('/:id/cart', async (req, res, next) => {
 })
 
 // GET mounted on /users/:id
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', userOrAdmin, async (req, res, next) => {
   try {
     const user = await User.findByPk(req.params.id, {
       attributes: ['id', 'username', 'firstName', 'lastName', 'email'],
@@ -74,7 +72,7 @@ router.post('/', async (req, res, next) => {
 })
 
 // Adding single Order(Cart) to User
-router.put('/:id/addOrder/:orderId', async (req, res, next) => {
+router.put('/:id/addOrder/:orderId', userOrAdmin, async (req, res, next) => {
   try {
     const user = await User.findByPk(req.params.id)
     const order = await Order.findByPk(req.params.orderId)
@@ -97,7 +95,7 @@ router.put('/:id/addOrder/:orderId', async (req, res, next) => {
 })
 
 // PUT mounted on /users/:id
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', userOrAdmin, async (req, res, next) => {
   try {
     const user = await User.findByPk(req.params.id)
     if (!user) {
@@ -114,7 +112,8 @@ router.put('/:id', async (req, res, next) => {
 // Deleting Order from User
 router.delete(
   '/:id/deleteOrder/:orderId',
-  /*adminhook*/ async (req, res, next) => {
+  userOrAdmin,
+  async (req, res, next) => {
     try {
       const user = await User.findByPk(req.params.id)
       const order = await Order.findByPk(req.params.orderId)
@@ -137,7 +136,7 @@ router.delete(
 )
 
 // DELETE mounted on /users/:id
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', adminOnly, async (req, res, next) => {
   try {
     const user = await User.findByPk(req.params.id)
     if (!user) {

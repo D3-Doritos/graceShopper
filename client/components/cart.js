@@ -6,7 +6,8 @@ import {
   removeProduct,
   addQty,
   subtractQty,
-  createCart
+  createCart,
+  addProduct
 } from '../store/singleOrder'
 import {fetchProducts} from '../store/products'
 import {Link} from 'react-router-dom'
@@ -63,7 +64,7 @@ class Cart extends React.Component {
     }
   }
 
-  handlePurchase(event) {
+  handlePurchase = async event => {
     event.preventDefault()
     if (this.props.user.id) {
       this.props.updateCart(this.props.cart.id, {
@@ -71,9 +72,20 @@ class Cart extends React.Component {
       })
       this.props.history.push(`/checkout/${this.props.cart.id}`)
     } else {
-      this.props.createTheCart({
+      await this.props.createTheCart({
         isComplete: true
       })
+      const localCart = JSON.parse(window.localStorage.getItem('cart'))
+      let cartArr = Object.keys(localCart)
+      let cartId = this.props.cart.data.id
+      for (let i = 0; i < cartArr.length; i++) {
+        await this.props.addTheProduct(cartId, cartArr[i])
+        for (let j = 0; j < localCart[cartArr[i]]; j++) {
+          await this.props.addQty(cartId, cartArr[i])
+        }
+      }
+      this.props.history.push(`/checkout/${cartId}`)
+      window.localStorage.clear()
     }
     let total = 0
     this.props.cart.products.forEach(product => {
@@ -162,7 +174,10 @@ const mapDispatch = dispatch => {
       dispatch(subtractQty(orderId, productId)),
     getProducts: () => dispatch(fetchProducts()),
     createTheCart: cart => dispatch(createCart(cart)),
+
     editOrder: (orderId, total) => dispatch(editOrder(orderId, total))
+    addTheProduct: (orderId, productId) =>
+      dispatch(addProduct(orderId, productId))
   }
 }
 
