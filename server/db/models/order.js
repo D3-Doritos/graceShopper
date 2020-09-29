@@ -11,4 +11,5 @@ const Order = db.define('order', {
   }
 })
 // total should be virtual field
+
 module.exports = Order

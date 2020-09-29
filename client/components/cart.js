@@ -5,7 +5,8 @@ import {
   updateCart,
   removeProduct,
   addQty,
-  subtractQty
+  subtractQty,
+  createCart
 } from '../store/singleOrder'
 import {fetchProducts} from '../store/products'
 import {Link} from 'react-router-dom'
@@ -16,6 +17,7 @@ class Cart extends React.Component {
     this.handleClick = this.handleClick.bind(this)
     this.handleAdd = this.handleAdd.bind(this)
     this.handleSubtract = this.handleSubtract.bind(this)
+    this.handlePurchase = this.handlePurchase.bind(this)
   }
   componentDidMount() {
     const userCart = this.props.getTheCart(this.props.match.params.userId)
@@ -36,9 +38,12 @@ class Cart extends React.Component {
 
   handleAdd(event) {
     event.preventDefault()
+    console.log('this.props----->', this.props)
     if (this.props.user.id) {
+      console.log('inside if statement')
       this.props.addQty(this.props.cart.id, event.target.value)
     } else {
+      console.log('______________-inside the ELSE____________')
       const localCart = JSON.parse(window.localStorage.getItem('cart'))
       localCart[event.target.value] = localCart[event.target.value] + 1
       const stringedCart = JSON.stringify(localCart)
@@ -60,53 +65,72 @@ class Cart extends React.Component {
     }
   }
 
+  handlePurchase(event) {
+    event.preventDefault()
+    if (this.props.user.id) {
+      this.props.updateCart(this.props.cart.id, {
+        isComplete: true
+      })
+      this.props.history.push(`/checkout/${this.props.cart.id}`)
+    } else {
+      this.props.createTheCart({
+        isComplete: true
+      })
+    }
+  }
+
   render() {
     return (
       <div>
-        <h1>Cart test</h1>
-        {this.props.cart.products ? (
-          this.props.cart.products.map(product => {
-            return (
-              <div key={product.id}>
-                <div>{product.name}</div>
-                <img src={product.imageUrl} height={200} width={200} />
-                <div>Price: ${product.product_order.historicalPrice}</div>
-                <div>Quantity: {product.product_order.qty}</div>
-                <div>{product.description}</div>
-                <Link to={`/products/${product.id}`}>Link to Product</Link>
-                <button
-                  type="submit"
-                  value={product.id}
-                  onClick={this.handleClick}
-                >
-                  Remove Item
-                </button>
+        <div>
+          <h1>Cart test</h1>
+          {this.props.cart.products ? (
+            this.props.cart.products.map(product => {
+              return (
+                <div key={product.id}>
+                  <div>{product.name}</div>
+                  <img src={product.imageUrl} height={200} width={200} />
+                  <div>Price: ${product.product_order.historicalPrice}</div>
+                  <div>Quantity: {product.product_order.qty}</div>
+                  <div>{product.description}</div>
+                  <Link to={`/products/${product.id}`}>Link to Product</Link>
+                  <button
+                    type="submit"
+                    value={product.id}
+                    onClick={this.handleClick}
+                  >
+                    Remove Item
+                  </button>
 
-                <button
-                  type="submit"
-                  value={product.id}
-                  onClick={this.handleAdd}
-                >
-                  {' '}
-                  Add Qty
-                </button>
+                  <button
+                    type="submit"
+                    value={product.id}
+                    onClick={this.handleAdd}
+                  >
+                    {' '}
+                    Add Qty
+                  </button>
 
-                <button
-                  type="submit"
-                  value={product.id}
-                  onClick={this.handleSubtract}
-                >
-                  {' '}
-                  Subtract Qty
-                </button>
+                  <button
+                    type="submit"
+                    value={product.id}
+                    onClick={this.handleSubtract}
+                  >
+                    {' '}
+                    Subtract Qty
+                  </button>
 
-                <br />
-              </div>
-            )
-          })
-        ) : (
-          <h2>Cart is empty</h2>
-        )}
+                  <br />
+                </div>
+              )
+            })
+          ) : (
+            <h2>Cart is empty</h2>
+          )}
+        </div>
+        <Link to={`/checkout/${this.props.cart.id}`}>
+          <button onClick={this.handlePurchase}>Purchase</button>
+        </Link>
       </div>
     )
   }
@@ -127,7 +151,8 @@ const mapDispatch = dispatch => {
     addQty: (orderId, productId) => dispatch(addQty(orderId, productId)),
     subtractQty: (orderId, productId) =>
       dispatch(subtractQty(orderId, productId)),
-    getProducts: () => dispatch(fetchProducts())
+    getProducts: () => dispatch(fetchProducts()),
+    createTheCart: cart => dispatch(createCart(cart))
   }
 }
 

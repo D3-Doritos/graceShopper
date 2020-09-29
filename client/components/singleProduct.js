@@ -48,6 +48,7 @@ class SingleProduct extends React.Component {
     event.preventDefault()
     if (this.props.user.id) {
       this.props.getTheCart(this.props.user.id)
+      console.log('this.props----->', this.props)
       this.props.addTheProduct(
         this.props.singleOrder.id,
         this.props.singleProduct.id
