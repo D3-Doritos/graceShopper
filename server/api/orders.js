@@ -128,6 +128,7 @@ router.put('/:id', userOrderOrAdmin, async (req, res, next) => {
       res.sendStatus(404)
     }
     const updatedOrder = await order.update(req.body)
+
     res.json(updatedOrder)
   } catch (error) {
     console.log('ERROR: ', error)
