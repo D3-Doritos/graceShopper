@@ -1,9 +1,11 @@
 const router = require('express').Router()
 const {Order, Product, Product_Order} = require('../db/models')
+const adminOnly = require('../../utils/adminOnly')
+const userOrderOrAdmin = require('../../utils/userOrderOrAdmin')
 module.exports = router
 
 //GET /api/orders
-router.get('/', async (req, res, next) => {
+router.get('/', adminOnly, async (req, res, next) => {
   try {
     const orders = await Order.findAll({
       include: {
@@ -17,7 +19,7 @@ router.get('/', async (req, res, next) => {
 })
 
 // GET mounted on api/orders/:id
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', userOrderOrAdmin, async (req, res, next) => {
   try {
     const order = await Order.findByPk(req.params.id, {
       include: {
@@ -44,70 +46,82 @@ router.post('/', async (req, res, next) => {
 })
 
 // Adding single products to cart (order)
-router.put('/:id/addProduct/:productId', async (req, res, next) => {
-  try {
-    const order = await Order.findByPk(req.params.id, {
-      include: {
-        all: true
+router.put(
+  '/:id/addProduct/:productId',
+  userOrderOrAdmin,
+  async (req, res, next) => {
+    try {
+      const order = await Order.findByPk(req.params.id, {
+        include: {
+          all: true
+        }
+      })
+      const product = await Product.findByPk(req.params.productId)
+
+      if (!order || !product) {
+        res.sendStatus(404)
       }
-    })
-    const product = await Product.findByPk(req.params.productId)
+      await order.addProduct(product)
 
-    if (!order || !product) {
-      res.sendStatus(404)
+      const productOrder = await Product_Order.findOne({
+        where: {orderId: req.params.id, productId: req.params.productId}
+      })
+      await productOrder.update({historicalPrice: product.price})
+
+      const updatedOrder = await Order.findByPk(req.params.id, {
+        include: Product
+      })
+
+      res.json(updatedOrder)
+    } catch (error) {
+      console.log('ERROR: ', error)
+      next(error)
     }
-    await order.addProduct(product)
-
-    const productOrder = await Product_Order.findOne({
-      where: {orderId: req.params.id, productId: req.params.productId}
-    })
-    await productOrder.update({historicalPrice: product.price})
-
-    const updatedOrder = await Order.findByPk(req.params.id, {
-      include: Product
-    })
-
-    res.json(updatedOrder)
-  } catch (error) {
-    console.log('ERROR: ', error)
-    next(error)
   }
-})
+)
 
-router.put('/:id/addQty/:productId', async (req, res, next) => {
-  try {
-    const productOrder = await Product_Order.findOne({
-      where: {orderId: req.params.id, productId: req.params.productId}
-    })
-    const currQty = productOrder.qty
-    await productOrder.update({qty: currQty + 1})
-    const updatedOrder = await Order.findByPk(req.params.id, {
-      include: Product
-    })
-    res.json(updatedOrder)
-  } catch (error) {
-    next(error)
+router.put(
+  '/:id/addQty/:productId',
+  userOrderOrAdmin,
+  async (req, res, next) => {
+    try {
+      const productOrder = await Product_Order.findOne({
+        where: {orderId: req.params.id, productId: req.params.productId}
+      })
+      const currQty = productOrder.qty
+      await productOrder.update({qty: currQty + 1})
+      const updatedOrder = await Order.findByPk(req.params.id, {
+        include: Product
+      })
+      res.json(updatedOrder)
+    } catch (error) {
+      next(error)
+    }
   }
-})
+)
 
-router.put('/:id/subtractQty/:productId', async (req, res, next) => {
-  try {
-    const productOrder = await Product_Order.findOne({
-      where: {orderId: req.params.id, productId: req.params.productId}
-    })
-    const currQty = productOrder.qty
-    await productOrder.update({qty: currQty - 1})
-    const updatedOrder = await Order.findByPk(req.params.id, {
-      include: Product
-    })
-    res.json(updatedOrder)
-  } catch (error) {
-    next(error)
+router.put(
+  '/:id/subtractQty/:productId',
+  userOrderOrAdmin,
+  async (req, res, next) => {
+    try {
+      const productOrder = await Product_Order.findOne({
+        where: {orderId: req.params.id, productId: req.params.productId}
+      })
+      const currQty = productOrder.qty
+      await productOrder.update({qty: currQty - 1})
+      const updatedOrder = await Order.findByPk(req.params.id, {
+        include: Product
+      })
+      res.json(updatedOrder)
+    } catch (error) {
+      next(error)
+    }
   }
-})
+)
 
 // PUT mounted on /order/:id
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', userOrderOrAdmin, async (req, res, next) => {
   try {
     const order = await Order.findByPk(req.params.id)
     if (!order) {
@@ -122,29 +136,33 @@ router.put('/:id', async (req, res, next) => {
 })
 
 // Deleting Single Products from Cart (Order)
-router.delete('/:id/deleteProduct/:productId', async (req, res, next) => {
-  try {
-    const order = await Order.findByPk(req.params.id)
-    const product = await Product.findByPk(req.params.productId)
+router.delete(
+  '/:id/deleteProduct/:productId',
+  userOrderOrAdmin,
+  async (req, res, next) => {
+    try {
+      const order = await Order.findByPk(req.params.id)
+      const product = await Product.findByPk(req.params.productId)
 
-    if (!order || !product) {
-      res.sendStatus(404)
+      if (!order || !product) {
+        res.sendStatus(404)
+      }
+      await order.removeProduct(product)
+
+      const updatedOrder = await Order.findByPk(req.params.id, {
+        include: Product
+      })
+
+      res.json(updatedOrder)
+    } catch (error) {
+      console.log('ERROR: ', error)
+      next(error)
     }
-    await order.removeProduct(product)
-
-    const updatedOrder = await Order.findByPk(req.params.id, {
-      include: Product
-    })
-
-    res.json(updatedOrder)
-  } catch (error) {
-    console.log('ERROR: ', error)
-    next(error)
   }
-})
+)
 
 // DELETE mounted on /order/:id
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', userOrderOrAdmin, async (req, res, next) => {
   try {
     const order = await Order.findByPk(req.params.id)
     if (!order) {
