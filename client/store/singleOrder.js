@@ -8,6 +8,7 @@ const REMOVE_PRODUCT = 'REMOVE_PRODUCT'
 const UPDATE_CART = 'UPDATE_CART'
 const ADD_QTY = 'ADD_QTY'
 const SUBTRACT_QTY = 'SUBTRACT_QTY'
+const CREATE_CART = 'CREATE_CART'
 
 // ACTION CREATORS
 const gotOrder = order => ({type: GET_ORDER, order})
@@ -17,6 +18,7 @@ const removedProduct = cart => ({type: REMOVE_PRODUCT, cart})
 const updatedCart = cart => ({type: UPDATE_CART, cart})
 const addedQty = cart => ({type: ADD_QTY, cart})
 const subtractedQty = cart => ({type: SUBTRACT_QTY, cart})
+const createdCart = cart => ({type: CREATE_CART, cart})
 
 // THUNK CREATORS
 export const fetchOrder = orderId => async dispatch => {
@@ -80,9 +82,14 @@ export const removeProduct = (orderId, productId) => async dispatch => {
 
 export const addQty = (orderId, productId) => async dispatch => {
   try {
+    console.log('______inside the thunk_________')
+    console.log('orderId------>', orderId)
+    console.log('productId----->', productId)
     const updatedOrder = await axios.put(
       `/api/orders/${orderId}/addQty/${productId}`
     )
+    console.log('----------after axios call---------')
+    console.log(updatedOrder.data)
     dispatch(addedQty(updatedOrder.data))
   } catch (error) {
     console.error(error)
@@ -104,6 +111,15 @@ export const updateCart = (orderId, newCart) => async dispatch => {
   try {
     const theUpdatedCart = await axios.put(`/api/orders/${orderId}`, newCart)
     dispatch(updatedCart(theUpdatedCart.data))
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export const createCart = cart => async dispatch => {
+  try {
+    const newCart = await axios.post(`/api/orders`, cart)
+    dispatch(createdCart(newCart))
   } catch (error) {
     console.error(error)
   }

@@ -9,6 +9,7 @@ import SingleUser from './components/singleUser'
 import Cart from './components/cart'
 import {me} from './store'
 import AllUsers from './components/allUsers'
+import Checkout from './components/checkout'
 
 /**
  * COMPONENT
@@ -30,6 +31,7 @@ class Routes extends Component {
         <Route exact path="/products/:productId" component={SingleProduct} />
         <Route path="/guestcart" component={Cart} />
         <Route exact path="/users/:userId" component={SingleUser} />
+        <Route exact path="/checkout" component={Checkout} />
         {/* <Route exact path="/users" component={AllUsers} /> */}
         {isLoggedIn && (
           <Switch>
@@ -39,6 +41,7 @@ class Routes extends Component {
             <Route path="/users/:userId/cart" component={Cart} />
             <Route exact path="/users/:userId" component={SingleUser} />
             <Route exact path="/users" component={AllUsers} />
+            <Route exact path="/checkout/:orderId" component={Checkout} />
           </Switch>
         )}
         {/* Displays our Login component as a fallback */}
