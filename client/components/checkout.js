@@ -1,20 +1,36 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import {fetchOrder} from '../store/singleOrder'
 
 class Checkout extends React.Component {
   constructor(props) {
     super(props)
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.props.getOrder(this.props.match.params.orderId)
+  }
 
   render() {
     return (
       <div>
-        <h3>Checkout Page</h3>
+        <h3>Thank you for your purchase!</h3>
+        <h4>Your total was: ${this.props.order.total}</h4>
       </div>
     )
   }
 }
 
-export default Checkout
+const mapState = state => {
+  return {
+    order: state.singleOrder
+  }
+}
+
+const mapDispatch = dispatch => {
+  return {
+    getOrder: orderId => dispatch(fetchOrder(orderId))
+  }
+}
+
+export default connect(mapState, mapDispatch)(Checkout)
