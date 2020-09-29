@@ -20,6 +20,7 @@ class Cart extends React.Component {
     this.handleAdd = this.handleAdd.bind(this)
     this.handleSubtract = this.handleSubtract.bind(this)
     this.handlePurchase = this.handlePurchase.bind(this)
+    this.cartTotal = this.cartTotal.bind(this)
   }
   componentDidMount() {
     const userCart = this.props.getTheCart(this.props.match.params.userId)
@@ -87,16 +88,23 @@ class Cart extends React.Component {
       this.props.history.push(`/checkout/${cartId}`)
       window.localStorage.clear()
     }
-    let total = 0
-    this.props.cart.products.forEach(product => {
-      const productTotal =
-        product.product_order.historicalPrice * product.product_order.qty
-      total += productTotal
-    })
-
     this.props.editOrder(this.props.cart.products[0].product_order.orderId, {
-      total: total
+      total: this.cartTotal()
     })
+  }
+
+  cartTotal() {
+    let total = 0
+    if (!this.props.cart.products) {
+      return 0
+    } else {
+      this.props.cart.products.forEach(product => {
+        const productTotal =
+          product.product_order.historicalPrice * product.product_order.qty
+        total += productTotal
+      })
+    }
+    return total
   }
 
   render() {
@@ -104,14 +112,19 @@ class Cart extends React.Component {
     return (
       <div>
         <div>
-          <h1>Cart test</h1>
+          <h1>Your Cart!</h1>
+          <h2>Your current total: {this.cartTotal() / 100}</h2>
           {this.props.cart.products ? (
             this.props.cart.products.map(product => {
               return (
                 <div key={product.id}>
                   <div>{product.name}</div>
                   <img src={product.imageUrl} height={200} width={200} />
-                  <div>Price: ${product.product_order.historicalPrice}</div>
+                  <div>
+                    Price: ${(
+                      product.product_order.historicalPrice / 100
+                    ).toString()}
+                  </div>
                   <div>Quantity: {product.product_order.qty}</div>
                   <div>{product.description}</div>
                   <Link to={`/products/${product.id}`}>Link to Product</Link>
