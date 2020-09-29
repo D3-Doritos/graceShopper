@@ -16,7 +16,7 @@ class Checkout extends React.Component {
     return (
       <div>
         <h3>Thank you for your purchase!</h3>
-        <h4>Your total was: ${this.props.order.total}</h4>
+        <h4>Your total was: ${(this.props.order.total / 100).toString()}</h4>
       </div>
     )
   }
