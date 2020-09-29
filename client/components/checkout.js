@@ -12,6 +12,7 @@ class Checkout extends React.Component {
   }
 
   render() {
+    console.log('props.order----', this.props.order.total)
     return (
       <div>
         <h3>Thank you for your purchase!</h3>
@@ -23,7 +24,7 @@ class Checkout extends React.Component {
 
 const mapState = state => {
   return {
-    order: state.singleOrder
+    order: state.orders
   }
 }
 

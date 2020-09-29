@@ -175,7 +175,7 @@ const mapDispatch = dispatch => {
     getProducts: () => dispatch(fetchProducts()),
     createTheCart: cart => dispatch(createCart(cart)),
 
-    editOrder: (orderId, total) => dispatch(editOrder(orderId, total))
+    editOrder: (orderId, total) => dispatch(editOrder(orderId, total)),
     addTheProduct: (orderId, productId) =>
       dispatch(addProduct(orderId, productId))
   }

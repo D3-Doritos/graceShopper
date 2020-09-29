@@ -6,14 +6,18 @@ module.exports = async (req, res, next) => {
       all: true
     }
   })
-  if (
-    (req.user && req.user.isAdmin) ||
-    (order.userId && order.userId === Number(req.user.id))
-  ) {
-    next()
+  if (order.userId) {
+    if (
+      (req.user && req.user.isAdmin) ||
+      (order.userId && order.userId === Number(req.user.id))
+    ) {
+      next()
+    } else {
+      const error = new Error('Not authorized to access page.')
+      error.status = 401
+      next(error)
+    }
   } else {
-    const error = new Error('Not authorized to access page.')
-    error.status = 401
-    next(error)
+    next()
   }
 }
