@@ -30,8 +30,27 @@ export const fetchOrder = orderId => async dispatch => {
 
 export const getCart = userId => async dispatch => {
   try {
-    const cart = await axios.get(`/api/users/${userId}/cart`)
-    dispatch(gotCart(cart.data))
+    if (!userId) {
+      const localCart = JSON.parse(window.localStorage.getItem('cart'))
+      const cartArr = Object.keys(localCart)
+      let prodArray = []
+      for (let i = 0; i < cartArr.length; i++) {
+        let cartItem = await axios.get(`/api/products/${cartArr[i]}`)
+        cartItem = cartItem.data
+        cartItem.product_order = {}
+        cartItem.product_order.historicalPrice = cartItem.price
+        cartItem.product_order.qty = localCart[cartArr[i]]
+        prodArray.push(cartItem)
+      }
+      const cartObj = {}
+      cartObj.products = prodArray
+
+      console.log(prodArray)
+      dispatch(gotCart(cartObj))
+    } else {
+      const cart = await axios.get(`/api/users/${userId}/cart`)
+      dispatch(gotCart(cart.data))
+    }
   } catch (error) {
     console.error(error)
   }

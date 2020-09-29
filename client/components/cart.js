@@ -23,34 +23,44 @@ class Cart extends React.Component {
 
   handleClick(event) {
     event.preventDefault()
-    this.props.deleteProduct(this.props.cart.id, event.target.value)
+    if (this.props.user.id) {
+      this.props.deleteProduct(this.props.cart.id, event.target.value)
+    } else {
+      const localCart = JSON.parse(window.localStorage.getItem('cart'))
+      delete localCart[event.target.value]
+      const stringedCart = JSON.stringify(localCart)
+      window.localStorage.setItem('cart', stringedCart)
+      this.props.getTheCart()
+    }
   }
 
   handleAdd(event) {
     event.preventDefault()
-    this.props.addQty(this.props.cart.id, event.target.value)
+    if (this.props.user.id) {
+      this.props.addQty(this.props.cart.id, event.target.value)
+    } else {
+      const localCart = JSON.parse(window.localStorage.getItem('cart'))
+      localCart[event.target.value] = localCart[event.target.value] + 1
+      const stringedCart = JSON.stringify(localCart)
+      window.localStorage.setItem('cart', stringedCart)
+      this.props.getTheCart()
+    }
   }
 
   handleSubtract(event) {
     event.preventDefault()
-    this.props.subtractQty(this.props.cart.id, event.target.value)
+    if (this.props.user.id) {
+      this.props.subtractQty(this.props.cart.id, event.target.value)
+    } else {
+      const localCart = JSON.parse(window.localStorage.getItem('cart'))
+      localCart[event.target.value] = localCart[event.target.value] - 1
+      const stringedCart = JSON.stringify(localCart)
+      window.localStorage.setItem('cart', stringedCart)
+      this.props.getTheCart()
+    }
   }
 
   render() {
-    if (this.props.cart.products) {
-      const productArray = this.props.cart.products
-    } else {
-      const localCart = JSON.parse(window.localStorage.getItem('cart'))
-      const cartArr = Object.keys(localCart)
-      const allProducts = this.props.getProducts()
-      const productArray = cartArr.map(async product => {
-        const newProduct = await this.props.getProduct(product)
-        return newProduct
-      })
-
-      console.log('all products ----', allProducts)
-    }
-
     return (
       <div>
         <h1>Cart test</h1>
