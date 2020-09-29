@@ -142,6 +142,8 @@ export default function(state = initialState, action) {
       return action.cart
     case SUBTRACT_QTY:
       return action.cart
+    case CREATE_CART:
+      return action.cart
     default:
       return state
   }
