@@ -7,6 +7,7 @@ import {
   addQty,
   subtractQty
 } from '../store/singleOrder'
+import {fetchProducts} from '../store/products'
 import {Link} from 'react-router-dom'
 
 class Cart extends React.Component {
@@ -22,17 +23,41 @@ class Cart extends React.Component {
 
   handleClick(event) {
     event.preventDefault()
-    this.props.deleteProduct(this.props.cart.id, event.target.value)
+    if (this.props.user.id) {
+      this.props.deleteProduct(this.props.cart.id, event.target.value)
+    } else {
+      const localCart = JSON.parse(window.localStorage.getItem('cart'))
+      delete localCart[event.target.value]
+      const stringedCart = JSON.stringify(localCart)
+      window.localStorage.setItem('cart', stringedCart)
+      this.props.getTheCart()
+    }
   }
 
   handleAdd(event) {
     event.preventDefault()
-    this.props.addQty(this.props.cart.id, event.target.value)
+    if (this.props.user.id) {
+      this.props.addQty(this.props.cart.id, event.target.value)
+    } else {
+      const localCart = JSON.parse(window.localStorage.getItem('cart'))
+      localCart[event.target.value] = localCart[event.target.value] + 1
+      const stringedCart = JSON.stringify(localCart)
+      window.localStorage.setItem('cart', stringedCart)
+      this.props.getTheCart()
+    }
   }
 
   handleSubtract(event) {
     event.preventDefault()
-    this.props.subtractQty(this.props.cart.id, event.target.value)
+    if (this.props.user.id) {
+      this.props.subtractQty(this.props.cart.id, event.target.value)
+    } else {
+      const localCart = JSON.parse(window.localStorage.getItem('cart'))
+      localCart[event.target.value] = localCart[event.target.value] - 1
+      const stringedCart = JSON.stringify(localCart)
+      window.localStorage.setItem('cart', stringedCart)
+      this.props.getTheCart()
+    }
   }
 
   render() {
@@ -101,7 +126,8 @@ const mapDispatch = dispatch => {
       dispatch(removeProduct(orderId, productId)),
     addQty: (orderId, productId) => dispatch(addQty(orderId, productId)),
     subtractQty: (orderId, productId) =>
-      dispatch(subtractQty(orderId, productId))
+      dispatch(subtractQty(orderId, productId)),
+    getProducts: () => dispatch(fetchProducts())
   }
 }
 
