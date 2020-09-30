@@ -91,15 +91,17 @@ class SingleProduct extends React.Component {
         {this.state.isDeleted ? (
           <h3>No Product!</h3>
         ) : (
-          <div>
+          <div className="single-prod-page">
+            <div className="title">{this.props.singleProduct.productName}</div>
             <img
               src={this.props.singleProduct.imageUrl}
               height={200}
               width={200}
             />
-            <h3>{this.props.singleProduct.name}</h3>
-            <h4>${(this.props.singleProduct.price / 100).toString()}</h4>
-            <h4>{this.props.singleProduct.description}</h4>
+            <div>
+              Price: ${(this.props.singleProduct.price / 100).toString()}
+            </div>
+            <div>Description: {this.props.singleProduct.description}</div>
           </div>
         )}
         {this.props.user.isAdmin ? (
@@ -149,7 +151,6 @@ class SingleProduct extends React.Component {
           </div>
         ) : (
           <div>
-            <h3>{this.props.user.firstName}'s favorite flavor!</h3>
             <div>
               <button onClick={this.handleClick}>Add to Cart</button>
             </div>
