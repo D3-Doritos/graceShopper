@@ -9,7 +9,6 @@ class SingleUser extends React.Component {
   componentDidMount() {}
 
   render() {
-    console.log(this.props)
     return (
       <div>
         <h3>This is the single user page</h3>

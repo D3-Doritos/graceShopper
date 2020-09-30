@@ -37,7 +37,6 @@ router.get('/:id', userOrderOrAdmin, async (req, res, next) => {
 router.post('/', async (req, res, next) => {
   try {
     const newOrder = await Order.create(req.body)
-    console.log('NEW ORDER------', newOrder)
     res.json(newOrder)
   } catch (error) {
     console.log('ERROR: ', error)

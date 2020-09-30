@@ -47,7 +47,6 @@ export const getCart = userId => async dispatch => {
       const cartObj = {}
       cartObj.products = prodArray
 
-      console.log(prodArray)
       dispatch(gotCart(cartObj))
     } else {
       const cart = await axios.get(`/api/users/${userId}/cart`)
@@ -82,14 +81,9 @@ export const removeProduct = (orderId, productId) => async dispatch => {
 
 export const addQty = (orderId, productId) => async dispatch => {
   try {
-    console.log('______inside the thunk_________')
-    console.log('orderId------>', orderId)
-    console.log('productId----->', productId)
     const updatedOrder = await axios.put(
       `/api/orders/${orderId}/addQty/${productId}`
     )
-    console.log('----------after axios call---------')
-    console.log(updatedOrder.data)
     dispatch(addedQty(updatedOrder.data))
   } catch (error) {
     console.error(error)
