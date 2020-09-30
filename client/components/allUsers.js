@@ -21,6 +21,7 @@ class AllUsers extends React.Component {
               <h3>First Name: {user.firstName}</h3>
               <h3>Last Name: {user.lastName}</h3>
               <h3>Email: {user.email}</h3>
+              <br />
             </div>
           )
         })}
