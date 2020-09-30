@@ -81,7 +81,7 @@ class Cart extends React.Component {
       let cartId = this.props.cart.data.id
       for (let i = 0; i < cartArr.length; i++) {
         await this.props.addTheProduct(cartId, cartArr[i])
-        for (let j = 0; j < localCart[cartArr[i]]; j++) {
+        for (let j = 1; j < localCart[cartArr[i]]; j++) {
           await this.props.addQty(cartId, cartArr[i])
         }
       }
@@ -121,9 +121,8 @@ class Cart extends React.Component {
                   <div>{product.name}</div>
                   <img src={product.imageUrl} height={200} width={200} />
                   <div>
-                    Price: ${(
-                      product.product_order.historicalPrice / 100
-                    ).toString()}
+                    Price: $
+                    {(product.product_order.historicalPrice / 100).toString()}
                   </div>
                   <div>Quantity: {product.product_order.qty}</div>
                   <div>{product.description}</div>
