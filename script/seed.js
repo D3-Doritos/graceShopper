@@ -9,7 +9,7 @@ async function seed() {
 
   const users = [
     {
-      username: 'test1',
+      username: 'andrew',
       firstName: 'Andrew',
       lastName: 'G',
       email: 'test1@email.com',
@@ -17,33 +17,30 @@ async function seed() {
       password: '123'
     },
     {
-      username: 'test2',
+      username: 'pawan',
       firstName: 'Pawan',
       lastName: 'B',
       email: 'test2@email.com',
       isAdmin: false,
-      password: '456'
+      password: '123'
     },
     {
-      username: 'test3',
+      username: 'tanveer',
       firstName: 'Tanveer',
       lastName: 'S',
       email: 'test3@email.com',
       isAdmin: false,
-      password: '789'
-    }
-  ]
-
-  for (let i = 0; i < 100; i++) {
-    users.push({
-      username: 'userbot' + i,
-      firstName: 'Do',
-      lastName: 'Rito',
-      email: 'dorito' + i + '@chips.com',
+      password: '123'
+    },
+    {
+      username: 'horace',
+      firstName: 'Horace',
+      lastName: 'Z',
+      email: 'test4@email.com',
       isAdmin: false,
       password: '123'
-    })
-  }
+    }
+  ]
 
   const products = [
     {
@@ -80,58 +77,31 @@ async function seed() {
     }
   ]
 
-  for (let i = 0; i < 100; i++) {
-    products.push({
-      productName: 'Dorito Flavor #' + i,
-      qty: 500,
-      price: 299,
-      imageUrl: 'https://i.ebayimg.com/images/g/A0kAAOSwZ41eeIYb/s-l640.jpg',
-      description: 'New Doritos'
-    })
-  }
+  // for (let i = 0; i < 100; i++) {
+  //   users.push({
+  //     username: 'userbot' + i,
+  //     firstName: 'Do',
+  //     lastName: 'Rito',
+  //     email: 'dorito' + i + '@chips.com',
+  //     isAdmin: false,
+  //     password: '123'
+  //   })
+  // }
+
+  // for (let i = 0; i < 100; i++) {
+  //   products.push({
+  //     productName: 'Dorito Flavor #' + i,
+  //     qty: 500,
+  //     price: 299,
+  //     imageUrl: 'https://i.ebayimg.com/images/g/A0kAAOSwZ41eeIYb/s-l640.jpg',
+  //     description: 'New Doritos'
+  //   })
+  // }
 
   const createdUsers = await Promise.all(users.map(user => User.create(user)))
   const createdProjects = await Promise.all(
     products.map(product => Product.create(product))
   )
-
-  for (let i = 1; i < users.length; i++) {
-    const user = await User.findByPk(i)
-    await user.createOrder()
-    const order = await Order.findByPk(i)
-    if (Math.random() < 0.6) {
-      const productId = Math.floor(Math.random() * products.length)
-      const product = await Product.findByPk(productId)
-      await order.addProduct(product)
-
-      const productOrder = await Product_Order.findOne({
-        where: {orderId: i, productId: productId}
-      })
-      await productOrder.update({historicalPrice: product.price})
-    }
-  }
-  // // find the user
-  // const userOne = await User.findByPk(1)
-  // const userTwo = await User.findByPk(2)
-  // const userThree = await User.findByPk(3)
-
-  // // find the product
-  // const productOne = await Product.findByPk(1)
-  // const productTwo = await Product.findByPk(2)
-  // const productThree = await Product.findByPk(3)
-
-  // // Create a Cart on our user
-  // await userOne.createOrder()
-  // await userTwo.createOrder()
-  // await userThree.createOrder()
-
-  // // Find order we created
-  // const orderOne = await Order.findByPk(1)
-  // const orderOne = await Order.findByPk(1)
-  // const orderOne = await Order.findByPk(1)
-
-  // // add product to order
-  // await orderOne.addProduct(productOne)
 
   console.log(`seeded ${users.length} users`)
   console.log(`seeded ${products.length} products`)
