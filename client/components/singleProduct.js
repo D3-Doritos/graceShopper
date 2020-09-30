@@ -5,7 +5,7 @@ import {
   updateProduct,
   deleteProduct
 } from '../store/singleProduct'
-import {getCart, addProduct} from '../store/singleOrder'
+import {getCart, addProduct, createCart} from '../store/singleOrder'
 import {me} from '../store/user'
 
 class SingleProduct extends React.Component {
@@ -48,6 +48,9 @@ class SingleProduct extends React.Component {
     event.preventDefault()
     if (this.props.user.id) {
       this.props.getTheCart(this.props.user.id)
+      if (!this.props.singleOrder) {
+        this.props.createCart({userId: this.props.user.id, isComplete: false})
+      }
       console.log('this.props----->', this.props)
       this.props.addTheProduct(
         this.props.singleOrder.id,
@@ -175,7 +178,8 @@ const mapDispatch = dispatch => {
       dispatch(addProduct(orderId, productId)),
     getTheCart: userId => dispatch(getCart(userId)),
     deleteTheProduct: product => dispatch(deleteProduct(product)),
-    getMe: () => dispatch(me())
+    getMe: () => dispatch(me()),
+    createCart: cart => dispatch(createCart(cart))
   }
 }
 
