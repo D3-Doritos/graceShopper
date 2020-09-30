@@ -51,7 +51,6 @@ class SingleProduct extends React.Component {
       if (!this.props.singleOrder) {
         this.props.createCart({userId: this.props.user.id, isComplete: false})
       }
-      console.log('this.props----->', this.props)
       this.props.addTheProduct(
         this.props.singleOrder.id,
         this.props.singleProduct.id
@@ -61,7 +60,6 @@ class SingleProduct extends React.Component {
       if (window.localStorage.cart) {
         const cart = JSON.parse(window.localStorage.cart)
         if (cart[this.props.singleProduct.id]) {
-          console.log('inside a place')
           let qty = cart[this.props.singleProduct.id]
           const newQty = qty + 1
           cart[this.props.singleProduct.id] = newQty
@@ -77,7 +75,6 @@ class SingleProduct extends React.Component {
         cart[id] = 1
         const stringCart = JSON.stringify(cart)
         window.localStorage.setItem('cart', stringCart)
-        console.log(window.localStorage)
       }
     }
   }

@@ -7,7 +7,6 @@ import Products from './products'
  */
 export const UserHome = props => {
   const {firstName} = props
-  console.log('-------Inside User Home ----------')
   return (
     <div>
       <h3>Welcome, {firstName}!</h3>

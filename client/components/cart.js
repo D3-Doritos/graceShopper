@@ -108,7 +108,6 @@ class Cart extends React.Component {
   }
 
   render() {
-    console.log('this.props.cart.products', this.props.cart.products)
     return (
       <div>
         <div>
