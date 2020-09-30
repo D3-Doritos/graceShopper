@@ -110,48 +110,67 @@ class Cart extends React.Component {
   render() {
     return (
       <div>
-        <div>
+        <div className="cart">
           <h1>Your Cart!</h1>
-          <h2>Your current total: {this.cartTotal() / 100}</h2>
+          <div className="purchase">
+            <div>Current total: ${this.cartTotal() / 100}</div>
+            <Link to={`/checkout/${this.props.cart.id}`}>
+              <button onClick={this.handlePurchase}>Purchase</button>
+            </Link>
+          </div>
           {this.props.cart.products ? (
             this.props.cart.products.map(product => {
               return (
-                <div key={product.id}>
-                  <div>{product.name}</div>
-                  <img src={product.imageUrl} height={200} width={200} />
-                  <div>
-                    Price: $
-                    {(product.product_order.historicalPrice / 100).toString()}
+                <div key={product.id} className="prod-in-cart">
+                  <div className="title">{product.productName}</div>
+
+                  <div className="prod-middle">
+                    <img src={product.imageUrl} height={200} width={200} />
+                    <div className="middle-text">
+                      <div>Description: {product.description}</div>
+                      <div>
+                        Price: $
+                        {(
+                          product.product_order.historicalPrice / 100
+                        ).toString()}
+                      </div>
+                      <div>
+                        <Link to={`/products/${product.id}`}>
+                          Link to Product
+                        </Link>
+                      </div>
+                    </div>
                   </div>
-                  <div>Quantity: {product.product_order.qty}</div>
-                  <div>{product.description}</div>
-                  <Link to={`/products/${product.id}`}>Link to Product</Link>
-                  <button
-                    type="submit"
-                    value={product.id}
-                    onClick={this.handleClick}
-                  >
-                    Remove Item
-                  </button>
+                  <div>
+                    <div>Quantity: {product.product_order.qty}</div>
+                    <div id="cart-buttons">
+                      <button
+                        type="submit"
+                        value={product.id}
+                        onClick={this.handleClick}
+                      >
+                        Remove Item
+                      </button>
 
-                  <button
-                    type="submit"
-                    value={product.id}
-                    onClick={this.handleAdd}
-                  >
-                    {' '}
-                    Add Qty
-                  </button>
+                      <button
+                        type="submit"
+                        value={product.id}
+                        onClick={this.handleAdd}
+                      >
+                        {' '}
+                        Add Qty
+                      </button>
 
-                  <button
-                    type="submit"
-                    value={product.id}
-                    onClick={this.handleSubtract}
-                  >
-                    {' '}
-                    Subtract Qty
-                  </button>
-
+                      <button
+                        type="submit"
+                        value={product.id}
+                        onClick={this.handleSubtract}
+                      >
+                        {' '}
+                        Subtract Qty
+                      </button>
+                    </div>
+                  </div>
                   <br />
                 </div>
               )
@@ -160,9 +179,6 @@ class Cart extends React.Component {
             <h2>Cart is empty</h2>
           )}
         </div>
-        <Link to={`/checkout/${this.props.cart.id}`}>
-          <button onClick={this.handlePurchase}>Purchase</button>
-        </Link>
       </div>
     )
   }
