@@ -37,7 +37,19 @@ router.get('/:id/cart', userOrAdmin, async (req, res, next) => {
     if (cart) {
       res.json(cart)
     } else {
-      res.send('Cart is empty')
+      await Order.create({
+        userId: req.params.id
+      })
+      const cart = await Order.findOne({
+        where: {
+          userId: req.params.id,
+          isComplete: false
+        },
+        include: {
+          all: true
+        }
+      })
+      res.json(cart)
     }
   } catch (error) {
     next(error)

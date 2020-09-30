@@ -48,10 +48,6 @@ class SingleProduct extends React.Component {
     event.preventDefault()
     if (this.props.user.id) {
       this.props.getTheCart(this.props.user.id)
-      if (!this.props.singleOrder) {
-        this.props.createCart({userId: this.props.user.id, isComplete: false})
-      }
-      console.log('this.props----->', this.props)
       this.props.addTheProduct(
         this.props.singleOrder.id,
         this.props.singleProduct.id
