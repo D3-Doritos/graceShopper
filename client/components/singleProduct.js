@@ -97,7 +97,7 @@ class SingleProduct extends React.Component {
               width={200}
             />
             <h3>{this.props.singleProduct.name}</h3>
-            <h4>{(this.props.singleProduct.price / 100).toString()}</h4>
+            <h4>${(this.props.singleProduct.price / 100).toString()}</h4>
             <h4>{this.props.singleProduct.description}</h4>
           </div>
         )}
